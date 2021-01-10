@@ -1,5 +1,23 @@
 const Users = require("../models/users.model");
+const middleware = require("../config/middleware");
 
+exports.login = (req, res) => {
+
+    Users.findOne({ username: req.body.username.toLowerCase(), password: req.body.password }, (err, result) => {
+        if (err) {
+            return next(err);
+        }
+        if (result) {
+            const token = middleware.generateToken(result.username);
+            res.setHeader("token", token);
+            const verify = middleware.verifyToken(res, token);
+            res.send({ token: token });
+        } else {
+            res.send({ status: "Username dan password anda tidak sesuai" });
+        }
+    });
+
+};
 
 exports.readUsers = (req, res) => Users.find((err, data) => err == null ? res.send(JSON.parse(JSON.stringify({ users: data }))) : res.send(err));
 

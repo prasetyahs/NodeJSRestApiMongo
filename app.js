@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+require("dotenv").config();
 var path = require('path');
 var logger = require('morgan');
 const bodyParser = require('body-parser');
